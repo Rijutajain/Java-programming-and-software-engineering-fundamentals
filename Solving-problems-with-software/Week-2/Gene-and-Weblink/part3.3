@@ -1,0 +1,143 @@
+public class part3 {
+    public int findStopCodon(String dna,int startindex ,String stopcodon ){
+    int currindex=dna.indexOf(stopcodon,startindex+3);
+    while (currindex!=-1){
+     if((currindex-startindex)%3==0){
+        return currindex;
+        }
+        else{
+        currindex=dna.indexOf(stopcodon,currindex+1);
+        }
+    }
+    return -1;
+    }
+      public String findGene(String dna,int where){
+    int startindex=dna.indexOf("ATG",where);
+    if(startindex==-1){
+    return "";
+    }
+    int taaindex=findStopCodon(dna,startindex,"TAA");
+    int tgaindex=findStopCodon(dna,startindex,"TGA");
+    int tagindex=findStopCodon(dna,startindex,"TAG");
+    int minindex=0;
+    if(taaindex==-1 || tgaindex!=-1 && tgaindex<taaindex){
+    minindex = tgaindex;
+    }
+    else{
+    minindex=taaindex;
+    }
+    if(minindex==-1 || tagindex!=-1 && tagindex<minindex){
+    minindex=tagindex;
+    }
+    if(minindex==-1){
+    return "";
+    }
+    if((minindex-startindex)%3==0){
+    return dna.substring(startindex,minindex+3);
+    }
+    else{
+    return "";
+    }
+    }
+    public StorageResource getAllGenes(String dna){
+        StorageResource genelist=new StorageResource();
+        int startindex=0;
+        while(true){
+        String currGene=findGene(dna,startindex);
+        if(currGene.isEmpty()){
+        break;
+        }
+        genelist.add(currGene);
+        startindex=dna.indexOf(currGene,startindex)+currGene.length();
+        }
+     return genelist;
+   
+    
+    }
+     public double cgRatio(String dna){
+    int i=0;
+    int count=0;
+    int length=dna.length();
+    for(i=0; i<length ;i++){
+        if(dna.charAt(i) =='C' || dna.charAt(i) =='G'){
+        count=count+1;
+        }
+      }
+    double ratio=(double)count/length;
+    return ratio;
+    }
+     public int countCTG(String dna){
+    int startindex=0;
+    int currindex=0;
+    int count=0;
+    while(startindex<dna.length()){
+        currindex=dna.indexOf("CTG",startindex);
+        if(currindex==-1){
+        break;
+        }
+        startindex=currindex+3;
+        count=count+1;
+    }
+    return count;
+    
+    }
+      public void processGenes(StorageResource sr){
+          int count1=0;
+        for(String g:sr.data()){
+        if(g.length()>60){
+        System.out.println("string longer than 60 characters= " +g);
+        count1=count1+1;
+        }
+        }
+        System.out.println("number of string longer than 60 characters = "+count1);
+        int count2=0;
+        for(String g:sr.data()){
+        double CG= cgRatio(g);
+        if(CG>0.35){
+        System.out.println("string whose cgRatio is greater then 0.35= "+g);
+        count2=count2+1;
+        }
+        
+        }
+        System.out.println("number of string whose cgRatio is greater then 0.35= "+count2);
+        int longest=0;
+        for(String g:sr.data()){
+            if(g.length()>longest){
+            longest=g.length();
+            }
+        
+        }
+        System.out.println("length of longest string= "+longest);
+        int count3=0;
+        for(String g:sr.data()){
+         count3= countCTG(g);
+        }
+        System.out.println("number of CTG = "+count3);
+        int count4=0;
+        for(String g:sr.data()){
+         count4=count4+1;
+        } 
+        System.out.println("total number of genes= "+count4);
+            
+    }
+    public void testProcessGenes(){
+    FileResource fr=new FileResource("GRch38dnapart.fa");
+    String dna=fr.asString();
+    StorageResource sr=getAllGenes(dna);
+    processGenes(sr);
+    //String DNA1="acgatggaccaggaacgataaatgcgaacgtag";
+    //StorageResource sr1=getAllGenes(DNA1);
+    //processGenes(sr1);
+    //String DNA2="acgatggactgaaa";
+    //StorageResource sr2=getAllGenes(DNA2);
+    //processGenes(sr2);
+    //String DNA3="atggcaccgtaaatgggccggtag";
+    //StorageResource sr3=getAllGenes(DNA3);
+    //processGenes(sr3);
+    //String DNA4="atgaaatagatgttttaa";
+    //StorageResource sr4=getAllGenes(DNA4);
+    //processGenes(sr4);
+    
+    
+    }
+}
