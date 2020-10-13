@@ -1,0 +1,46 @@
+public class part2 {
+ public double cgRatio(String dna){
+    int i=0;
+    int count=0;
+    int length=dna.length();
+    for(i=0; i<length ;i++){
+        if(dna.charAt(i) =='c' || dna.charAt(i) =='g'){
+        count=count+1;
+        }
+      }
+    double ratio=(double)count/length;
+    return ratio;
+    }
+    public void testcgRatio(){
+    String a="adfcrgcdfgtrfacd";
+    double ratio1=cgRatio(a);
+    System.out.println(ratio1);
+    String b="adhsjtuvnbjh";
+    double ratio2=cgRatio(b);
+    System.out.println(ratio2);
+    }
+    public int countCTG(String dna){
+    int startindex=0;
+    int currindex=0;
+    int count=0;
+    while(startindex<dna.length()){
+        currindex=dna.indexOf("CTG",startindex);
+        if(currindex==-1){
+        break;
+        }
+        startindex=currindex+3;
+        count=count+1;
+    }
+    return count;
+    
+    }
+    public void testcountCTG(){
+    String a="ATCTGCACTG";
+    int count1=countCTG(a);
+    System.out.println(count1);
+    String b="AGCGCATCG";
+    int count2=countCTG(b);
+    System.out.println(count2);
+    
+    }
+}
